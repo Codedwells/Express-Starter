@@ -13,7 +13,11 @@ export default class Logger {
         res.on('finish', () => {
             /** Add status code */
             const elapsed = Date.now() - start;
-            console.log(chalk.green(`[${req.method}] Request`), ` URL: ${chalk.gray.bold(req.url)} - ${chalk.cyan('Status')}: ${res.statusCode}`, chalk.gray.bold(`completed in ${elapsed} ms`));
+            console.log(
+                chalk.green(`[${req.method}] Request`),
+                ` URL: ${chalk.gray.bold(req.url)} - ${chalk.cyan('Status')}: ${res.statusCode === 200 ? chalk.greenBright.bold(200) : chalk.yellowBright.bold(res.statusCode)}`,
+                chalk.gray.bold(`in ${elapsed} ms`)
+            );
         });
 
         next();
