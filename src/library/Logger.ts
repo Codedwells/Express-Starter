@@ -1,8 +1,21 @@
+import { NextFunction, Request, Response } from 'express';
 import chalk from 'chalk';
 
-export default class Logging {
+export default class Logger {
     public static log = (args: any) => this.info(args);
     public static info = (args: any) => console.log(chalk.blue(`[${new Date().toLocaleString()}] [INFO]`), typeof args === 'string' ? chalk.blueBright(args) : args);
-    public static warning = (args: any) => console.log(chalk.yellow(`[${new Date().toLocaleString()}] [WARN]`), typeof args === 'string' ? chalk.yellowBright(args) : args);
-    public static error = (args: any) => console.log(chalk.red(`[${new Date().toLocaleString()}] [ERROR]`), typeof args === 'string' ? chalk.redBright(args) : args);
+    public static warning = (args: any) => console.log(chalk.yellow.bold(`[${new Date().toLocaleString()}] [WARN]`), typeof args === 'string' ? chalk.yellowBright(args) : args);
+    public static error = (args: any) => console.log(chalk.red.bold(`[${new Date().toLocaleString()}] [ERROR]`), typeof args === 'string' ? chalk.redBright(args) : args);
+
+    public static Borgen = (req: Request, res: Response, next: NextFunction) => {
+        /** Log the request */
+        const start = Date.now();
+        res.on('finish', () => {
+            /** Add status code */
+            const elapsed = Date.now() - start;
+            console.log(chalk.green(`[${req.method}] Request`), ` URL: ${chalk.gray.bold(req.url)} - ${chalk.cyan('Status')}: ${res.statusCode}`, chalk.gray.bold(`completed in ${elapsed} ms`));
+        });
+
+        next();
+    };
 }

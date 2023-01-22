@@ -1,30 +1,36 @@
 import express, { NextFunction, Request, Response } from 'express';
-import morgan from 'morgan';
 import dotenv from 'dotenv';
+import compression from 'compression';
+
 import router from './routes/routes';
 import Logger from './library/Logger';
-import chalk from 'chalk';
+import connectDb from './db.connect';
+import { config } from './config/config';
 
-const app = express();
 dotenv.config();
+const app = express();
+const PORT = config.server.port;
 
-let PORT = process.env.PORT;
-
-// Middleware
-app.use(morgan('tiny'));
+/** Middleware */
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(Logger.Borgen);
 
-// Routes
+/** Routes */
 app.use('/api/v1', router);
 
-//Logger.error("This is a test warning")
-const log= ()=>{
-	let log = console.log
-	  log(chalk.blue('Hello') + ' World' + chalk.red('!'))
-}
-log()
+/**
+ * Only start server if mongo connection success
+ */
+const StartServer = () => {
+    app.listen(PORT, () => {
+        Logger.info(`The server is listening on port ${PORT}`);
+    });
+};
 
-app.listen(PORT, () => {
-	console.log(`The server is listening on port ${PORT}`);
-});
+/**
+ * Connect to mongoDB
+ * Then start the server
+ */
+connectDb(StartServer);
