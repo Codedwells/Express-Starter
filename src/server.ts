@@ -8,7 +8,7 @@ import connectDb from './db.connect';
 import { config } from './config/config';
 
 dotenv.config();
-const app = express();
+export const app = express();
 const PORT = config.server.port;
 
 /** Middleware */
