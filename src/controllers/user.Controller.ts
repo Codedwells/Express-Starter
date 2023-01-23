@@ -10,7 +10,7 @@ export const newUser = async (req: Request, res: Response): Promise<void> => {
     let existingUser = await User.findOne({ name: req.body.name });
 
     if (existingUser) {
-        res.status(200).json({ status: 'success', data: { message: 'User already exists!!', existingUser } });
+        res.status(400).json({ status: 'failed', data: { message: 'User already exists!!', existingUser } });
         return;
     }
     let name = req.body.name;
@@ -33,7 +33,7 @@ export const findUser = async (req: Request, res: Response): Promise<void> => {
     let user = await User.findOne({ name: req.params.username });
     if (!user) {
         Logger.warning('User not found!!!');
-        res.status(200).json({ status: 'failed', message: 'User not found!!' });
+        res.status(400).json({ status: 'failed', message: 'User not found!!' });
         return;
     }
 
@@ -64,11 +64,11 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
     if (!user) {
         Logger.warning('User does not exist!!!');
-        res.status(200).json({ status: 'failed', data: 'User does not exist!!!' });
+        res.status(400).json({ status: 'failed', data: 'User does not exist!!!' });
         return;
     }
 
-    res.status(200).json({ status: 'success', data: { message: 'Updated user.', user } });
+    res.status(202).json({ status: 'success', data: { message: 'Updated user.', user } });
 };
 
 /**
@@ -80,7 +80,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
 
     if (deletedUser === null) {
         Logger.warning('User does not exist!!!');
-        res.status(200).json({ status: 'failed', data: 'User does not exist!!!' });
+        res.status(400).json({ status: 'failed', data: 'User does not exist!!!' });
         return;
     }
 

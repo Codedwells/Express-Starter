@@ -1,53 +1,53 @@
 import request from 'supertest';
-import { expect } from 'chai';
 import { app } from '../server';
 
 describe('GET api/v1/user/Dan', () => {
-    it('should return Dan as an object', (done) => {
-        request(app).get('api/v1/user/Dan').expect(200, done);
+    test('should respond with 200', async () => {
+        const response = await request(app).get('api/v1/user/samson');
+
+        expect(response.statusCode).toBe(200);
     });
 });
 
 describe('GET api/v1/users', () => {
-    it('should return all users', (done) => {
-        request(app).get('api/v1/users').expect(200, done);
+    test('should respond with 200', async () => {
+        const response = await request(app).get('api/v1/users');
+
+        expect(response.statusCode).toBe(200);
     });
 });
 
-// describe('POST api/v1/user', () => {
-//     it('should return 201 user created', (done) => {
-//         request(app)
-//             .post('api/v1/user')
-//             .field('name', 'Jamurah')
-//             .field('age', 20)
-//             .end((err, res) => {
-//                 expect(res.error).to.be.false;
-//                 done();
-//             })
-//             .expect(201);
-//     });
-// });
+describe('POST api/v1/user', () => {
+    test('should respond with status 201', async () => {
+        const response = await request(app).post('api/v1/user').send({
+            name: 'Jaython',
+            age: 20
+        });
+
+        expect(response.statusCode).toBe(201);
+    });
+});
 
 describe('PUT api/v1/user/faizer', () => {
-    it('should return 200 ok for user info update', (done) => {
-        request(app)
-            .put('api/v1/faizer')
-            .expect(200)
-            .end((err, res) => {
-                expect(res.error).not.to.be.undefined;
-                done();
-            });
+    test('should respond with status 202', async () => {
+        const response = await request(app).post('api/v1/user').send({
+            name: 'samson',
+            field: 'name',
+            value: 'sammy'
+        });
+
+        expect(response.statusCode).toBe(202);
     });
 });
 
 describe('DELETE api/v1/user/:<username>', () => {
-    it('should return 200 for used removed', (done) => {
-        request(app)
-            .delete('api/v1/user/dan')
-            .expect(200)
-            .end((err, res) => {
-                expect(res.error).not.to.be.undefined;
-                done();
-            });
+    test('should respond with status 200', async () => {
+        const response = await request(app).post('api/v1/user/jaython').send({
+            name: 'jaython',
+            field: 'name',
+            value: 'sammy'
+        });
+
+        expect(response.statusCode).toBe(202);
     });
 });
