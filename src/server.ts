@@ -8,7 +8,7 @@ import connectDb from './db.connect';
 import { config } from './config/config';
 
 dotenv.config();
-export const app = express();
+ const app = express();
 const PORT = config.server.port;
 
 /** Middleware */
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(Logger.Borgen);
 
 /** Routes */
-app.use('/api/v1', router);
+app.use('/', router);
 
 /** Heathcheck */
 app.get('/ping', (req: Request, res: Response, next: NextFunction) => {
@@ -27,7 +27,7 @@ app.get('/ping', (req: Request, res: Response, next: NextFunction) => {
 
 /** Error Handling */
 app.use((req, res, next) => {
-    Logger.error('Route not found!!!');
+    Logger.error(`${req.path} Route not found!!!`);
 
     next();
 });
@@ -41,3 +41,5 @@ const StartServer = () => {
     });
 };
 connectDb(StartServer);
+
+export default app
